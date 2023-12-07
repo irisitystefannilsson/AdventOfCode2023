@@ -80,7 +80,6 @@ def advent4_2():
             
     print('Sum :', sum)
 
-
     
 if __name__ == '__main__':
 
