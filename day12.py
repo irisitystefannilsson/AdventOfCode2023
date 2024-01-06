@@ -19,26 +19,27 @@ def ok_conf(conf : list, constr : list):
     return True
 
 
-def generate(numbers : list, constr : list, start=0, incoming=list()):
-    #print('Start->', start)
-    #print(incoming)
-    #print('Num:', numbers)
-    #print('Constr:', constr[start:])
+def generate(numbers : list, constr : str, start=0):
+    ckey = tuple(numbers + list(constr) + [start])
+    if ckey in DATA_CACHE:
+        return DATA_CACHE[ckey]
+    
     lc = len(constr) - start
     ln = sum(numbers) + len(numbers) - 1
     nod = 0
     if lc < ln:
         return 0
     for i in range(lc - ln + 1):
-        new_incoming = incoming + i*['.'] + numbers[0]*['#'] + ['.']
-        if ok_conf(new_incoming, constr):
+        testarr = i*['.'] + numbers[0]*['#'] + ['.']
+        if ok_conf(testarr, constr[start:start+len(testarr)]):
             if len(numbers) > 1:
-                nod += generate(numbers[1:], constr, start + i + numbers[0] + 1, new_incoming)
+                nod += generate(numbers[1:], constr, start + i + numbers[0] + 1)
             else:
-                new_incoming += (len(constr) - len(new_incoming))*['.']
-                if ok_conf(new_incoming, constr):
+                endarr = (len(constr) - (start + len(testarr)))*['.']
+                if ok_conf(endarr, constr[(start + len(testarr)):]):
                     nod += 1
-            
+
+    DATA_CACHE[ckey] = nod
     return nod
 
     
@@ -58,12 +59,12 @@ def advent12_1():
         #print('----------- parr : ', parr, '----------')
         sum_parr += parr
 
-    print('Sum of arrs:' ,sum_parr)
+    print('Sum of arrs(1):' ,sum_parr)
 
 
 def advent12_2():
-    file = open('input12_example.txt')
-    #file = open('input12.txt')
+    #file = open('input12_example.txt')
+    file = open('input12.txt')
 
     sum_parr = 0
     for line in file:
@@ -73,14 +74,13 @@ def advent12_2():
         numbers = [int(e) for e in numbers]
         numbers = 5*numbers
         springs = springs + '?' + springs + '?' + springs + '?' + springs + '?' + springs 
-        #print(springs, numbers)
         pbroke = springs.split('.')
         pbroke = [e for e in pbroke if e != '']
         parr = generate(numbers, springs)
-        print('----------- parr : ', parr, '----------')
+        #print('----------- parr : ', parr, '----------')
         sum_parr += parr
         #break
-    print('Sum of arrs:' ,sum_parr)
+    print('Sum of arrs(2):' ,sum_parr)
     
     
 if __name__ == '__main__':
