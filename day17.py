@@ -1,81 +1,132 @@
 import time
 import numpy as np
-import functools
-import math
-import copy
+import networkx as nx
+
 
 NUMBER_OF_CALLS = 0
 LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
-STARTSET = set()
+
+"""
+The idea of building a graph with vertical & horizontal connections of 
+different lengths(*) comes from the reddit discussion board user 'thblt'. 
+(https://www.reddit.com/r/adventofcode/comments/18zx149/2023_day_17_part_1_wheres_my_mistake/)
+
+(*) the length of the edges is the same as the possible moving intervals
+"""
+
+def build_graph(blocks : np.full):
+    G = nx.DiGraph()
+    bsize = blocks.shape
+    for r in range(bsize[0]):
+        for c in range(bsize[1]):
+            G.add_node((r, c, 'h'))
+            G.add_node((r, c, 'v'))
+
+    for r in range(bsize[0]):
+        for c in range(bsize[1]):
+            if c > 0:
+                G.add_edge((r, c, 'h'), (r, c - 1, 'v'), weight=blocks[r, c - 1])
+            if c > 1:
+                G.add_edge((r, c, 'h'), (r, c - 2, 'v'), weight=blocks[r, c - 1] + blocks[r, c - 2])
+            if c > 2:
+                G.add_edge((r, c, 'h'), (r, c - 3, 'v'), weight=blocks[r, c - 1] + blocks[r, c - 2] + blocks[r, c - 3])
+            if c < bsize[1] - 1:
+                G.add_edge((r, c, 'h'), (r, c + 1, 'v'), weight=blocks[r, c + 1])
+            if c < bsize[1] - 2 :
+                G.add_edge((r, c, 'h'), (r, c + 2, 'v'), weight=blocks[r, c + 1] + blocks[r, c + 2])
+            if c < bsize[1] - 3:
+                G.add_edge((r, c, 'h'), (r, c + 3, 'v'), weight=blocks[r, c + 1] + blocks[r, c + 2] + blocks[r, c + 3])
+            #
+            if r > 0:
+                G.add_edge((r, c, 'v'), (r - 1, c, 'h'), weight=blocks[r - 1, c])
+            if r > 1:
+                G.add_edge((r, c, 'v'), (r - 2, c, 'h'), weight=blocks[r - 1, c] + blocks[r - 2, c])
+            if r > 2:
+                G.add_edge((r, c, 'v'), (r - 3, c, 'h'), weight=blocks[r - 1, c] + blocks[r - 2, c] + blocks[r - 3, c])
+            if r < bsize[0] - 1:
+                G.add_edge((r, c, 'v'), (r + 1, c, 'h'), weight=blocks[r + 1, c])
+            if r < bsize[0] - 2:
+                G.add_edge((r, c, 'v'), (r + 2, c, 'h'), weight=blocks[r + 1, c] + blocks[r + 2, c])
+            if r < bsize[0] - 3:
+                G.add_edge((r, c, 'v'), (r + 3, c, 'h'), weight=blocks[r + 1, c] + blocks[r + 2, c] + blocks[r + 3, c])
+
+    return G
 
 
-def min_coord(front : set, dist : np.full, visited : np.full):
-    minv = 2**33
-    coord = (0, 0)
-    for p in front:
-        if not visited[p[0], p[1]] and dist[p[0], p[1]] < minv:
-            minv = dist[p[0], p[1]]
-            coord = p
+def build_graph_2(blocks : np.full):
+    G = nx.DiGraph()
+    bsize = blocks.shape
+    for r in range(bsize[0]):
+        for c in range(bsize[1]):
+            G.add_node((r, c, 'h'))
+            G.add_node((r, c, 'v'))
 
-    return coord
-            
+    for r in range(bsize[0]):
+        for c in range(bsize[1]):
+            if c > 3:
+                G.add_edge((r, c, 'h'), (r, c - 4, 'v'), weight=blocks[r, c - 1] + blocks[r, c - 2] + blocks[r, c - 3] + blocks[r, c - 4])
+            if c > 4:
+                G.add_edge((r, c, 'h'), (r, c - 5, 'v'), weight=blocks[r, c - 1] + blocks[r, c - 2] + blocks[r, c - 3] + blocks[r, c - 4] + blocks[r, c - 5])
+            if c > 5:
+                G.add_edge((r, c, 'h'), (r, c - 6, 'v'), weight=blocks[r, c - 1] + blocks[r, c - 2] + blocks[r, c - 3] + blocks[r, c - 4] + blocks[r, c - 5] + blocks[r, c - 6])
+            if c > 6:
+                G.add_edge((r, c, 'h'), (r, c - 7, 'v'), weight=blocks[r, c - 1] + blocks[r, c - 2] + blocks[r, c - 3] + blocks[r, c - 4] + blocks[r, c - 5] + blocks[r, c - 6] + blocks[r, c - 7])
+            if c > 7:
+                G.add_edge((r, c, 'h'), (r, c - 8, 'v'), weight=blocks[r, c - 1] + blocks[r, c - 2] + blocks[r, c - 3] + blocks[r, c - 4] + blocks[r, c - 5] + blocks[r, c - 6] + blocks[r, c - 7] + blocks[r, c - 8])
+            if c > 8:
+                G.add_edge((r, c, 'h'), (r, c - 9, 'v'), weight=blocks[r, c - 1] + blocks[r, c - 2] + blocks[r, c - 3] + blocks[r, c - 4] + blocks[r, c - 5] + blocks[r, c - 6] + blocks[r, c - 7] + blocks[r, c - 8] + blocks[r, c - 9])
+            if c > 9:
+                G.add_edge((r, c, 'h'), (r, c - 10, 'v'), weight=blocks[r, c - 1] + blocks[r, c - 2] + blocks[r, c - 3] + blocks[r, c - 4] + blocks[r, c - 5] + blocks[r, c - 6] + blocks[r, c - 7] + blocks[r, c - 8] + blocks[r, c - 9] + blocks[r, c - 10])
+            if c < bsize[1] - 4:
+                G.add_edge((r, c, 'h'), (r, c + 4, 'v'), weight=blocks[r, c + 1] + blocks[r, c + 2] + blocks[r, c + 3] + blocks[r, c + 4])
+            if c < bsize[1] - 5:
+                G.add_edge((r, c, 'h'), (r, c + 5, 'v'), weight=blocks[r, c + 1] + blocks[r, c + 2] + blocks[r, c + 3] + blocks[r, c + 4] + blocks[r, c + 5])
+            if c < bsize[1] - 6:
+                G.add_edge((r, c, 'h'), (r, c + 6, 'v'), weight=blocks[r, c + 1] + blocks[r, c + 2] + blocks[r, c + 3] + blocks[r, c + 4] + blocks[r, c + 5] + blocks[r, c + 6])
+            if c < bsize[1] - 7:
+                G.add_edge((r, c, 'h'), (r, c + 7, 'v'), weight=blocks[r, c + 1] + blocks[r, c + 2] + blocks[r, c + 3] + blocks[r, c + 4] + blocks[r, c + 5] + blocks[r, c + 6] + blocks[r, c + 7])
+            if c < bsize[1] - 8:
+                G.add_edge((r, c, 'h'), (r, c + 8, 'v'), weight=blocks[r, c + 1] + blocks[r, c + 2] + blocks[r, c + 3] + blocks[r, c + 4] + blocks[r, c + 5] + blocks[r, c + 6] + blocks[r, c + 7] + blocks[r, c + 8])
+            if c < bsize[1] - 9:
+                G.add_edge((r, c, 'h'), (r, c + 9, 'v'), weight=blocks[r, c + 1] + blocks[r, c + 2] + blocks[r, c + 3] + blocks[r, c + 4] + blocks[r, c + 5] + blocks[r, c + 6] + blocks[r, c + 7] + blocks[r, c + 8] + blocks[r, c + 9])
+            if c < bsize[1] - 10:
+                G.add_edge((r, c, 'h'), (r, c + 10, 'v'), weight=blocks[r, c + 1] + blocks[r, c + 2] + blocks[r, c + 3] + blocks[r, c + 4] + blocks[r, c + 5] + blocks[r, c + 6] + blocks[r, c + 7] + blocks[r, c + 8] + blocks[r, c + 9] + blocks[r, c + 10])
+            #
+            if r > 3:
+                G.add_edge((r, c, 'v'), (r - 4, c, 'h'), weight=blocks[r - 1, c] + blocks[r - 2, c] + blocks[r - 3, c] + blocks[r - 4, c])
+            if r > 4:
+                G.add_edge((r, c, 'v'), (r - 5, c, 'h'), weight=blocks[r - 1, c] + blocks[r - 2, c] + blocks[r - 3, c] + blocks[r - 4, c] + blocks[r - 5, c])
+            if r > 5:
+                G.add_edge((r, c, 'v'), (r - 6, c, 'h'), weight=blocks[r - 1, c] + blocks[r - 2, c] + blocks[r - 3, c] + blocks[r - 4, c] + blocks[r - 5, c] + blocks[r - 6, c])
+            if r > 6:
+                G.add_edge((r, c, 'v'), (r - 7, c, 'h'), weight=blocks[r - 1, c] + blocks[r - 2, c] + blocks[r - 3, c] + blocks[r - 4, c] + blocks[r - 5, c] + blocks[r - 6, c] + blocks[r - 7, c])
+            if r > 7:
+                G.add_edge((r, c, 'v'), (r - 8, c, 'h'), weight=blocks[r - 1, c] + blocks[r - 2, c] + blocks[r - 3, c] + blocks[r - 4, c] + blocks[r - 5, c] + blocks[r - 6, c] + blocks[r - 7, c] + blocks[r - 8, c])
+            if r > 8:
+                G.add_edge((r, c, 'v'), (r - 9, c, 'h'), weight=blocks[r - 1, c] + blocks[r - 2, c] + blocks[r - 3, c] + blocks[r - 4, c] + blocks[r - 5, c] + blocks[r - 6, c] + blocks[r - 7, c] + blocks[r - 8, c] + blocks[r - 9, c])
+            if r > 9:
+                G.add_edge((r, c, 'v'), (r - 10, c, 'h'), weight=blocks[r - 1, c] + blocks[r - 2, c] + blocks[r - 3, c] + blocks[r - 4, c] + blocks[r - 5, c] + blocks[r - 6, c] + blocks[r - 7, c] + blocks[r - 8, c] + blocks[r - 9, c] + blocks[r - 10, c])
+            if r < bsize[0] - 4:
+                G.add_edge((r, c, 'v'), (r + 4, c, 'h'), weight=blocks[r + 1, c] + blocks[r + 2, c] + blocks[r + 3, c] + blocks[r + 4, c])
+            if r < bsize[0] - 5:
+                G.add_edge((r, c, 'v'), (r + 5, c, 'h'), weight=blocks[r + 1, c] + blocks[r + 2, c] + blocks[r + 3, c] + blocks[r + 4, c] + blocks[r + 5, c])
+            if r < bsize[0] - 6:
+                G.add_edge((r, c, 'v'), (r + 6, c, 'h'), weight=blocks[r + 1, c] + blocks[r + 2, c] + blocks[r + 3, c] + blocks[r + 4, c] + blocks[r + 5, c] + blocks[r + 6, c])
+            if r < bsize[0] - 7:
+                G.add_edge((r, c, 'v'), (r + 7, c, 'h'), weight=blocks[r + 1, c] + blocks[r + 2, c] + blocks[r + 3, c] + blocks[r + 4, c] + blocks[r + 5, c] + blocks[r + 6, c] + blocks[r + 7, c])
+            if r < bsize[0] - 8:
+                G.add_edge((r, c, 'v'), (r + 8, c, 'h'), weight=blocks[r + 1, c] + blocks[r + 2, c] + blocks[r + 3, c] + blocks[r + 4, c] + blocks[r + 5, c] + blocks[r + 6, c] + blocks[r + 7, c] + blocks[r + 8, c])
+            if r < bsize[0] - 9:
+                G.add_edge((r, c, 'v'), (r + 9, c, 'h'), weight=blocks[r + 1, c] + blocks[r + 2, c] + blocks[r + 3, c] + blocks[r + 4, c] + blocks[r + 5, c] + blocks[r + 6, c] + blocks[r + 7, c] + blocks[r + 8, c] + blocks[r + 9, c])
+            if r < bsize[0] - 10:
+                G.add_edge((r, c, 'v'), (r + 10, c, 'h'), weight=blocks[r + 1, c] + blocks[r + 2, c] + blocks[r + 3, c] + blocks[r + 4, c] + blocks[r + 5, c] + blocks[r + 6, c] + blocks[r + 7, c] + blocks[r + 8, c] + blocks[r + 9, c] + blocks[r + 10, c])
 
-def find_forbidden_path(p : tuple, dist : np.full, visited : np.full):
-    pp = p
-    bsize = dist.shape
-    forbidden = (0, 0)
-    back_path = list()
-    if p[0] > 0 or p[1] > 0:
-        for b in range(3):
-            minv = dist[pp[0], pp[1]]
-            for cp in [(pp[0]+1, pp[1]),(pp[0]-1, pp[1]),(pp[0], pp[1]+1),(pp[0], pp[1]-1)]:
-                if cp[0] >= 0 and cp[0] < bsize[0] and cp[1] >= 0 and cp[1] < bsize[1]:
-                    if visited[cp[0], cp[1]] and dist[cp[0], cp[1]] < minv:
-                        minv = dist[cp[0], cp[1]]
-                        pp = cp
-            back_path.append(pp)
-        # on straight line?
-        if (abs(p[0] - back_path[0][0]) == 1  and abs(p[0] - back_path[1][0]) == 2 and abs(p[0] - back_path[2][0]) == 3):
-            forbidden = (p[0] + (back_path[0][0] - back_path[1][0]), p[1])
-            #print(p, back_path, forbidden)
-        if (abs(p[1] - back_path[0][1]) == 1  and abs(p[1] - back_path[1][1]) == 2 and abs(p[1] - back_path[2][1]) == 3):
-            forbidden = (p[0], p[1] + (back_path[0][1] - back_path[1][1]))
-            #print(p, back_path, forbidden)
-    return forbidden
+    return G
 
     
-def dijkstra(blocks : np.full, start=(0, 0)):
-    bsize = blocks.shape
-    visited = np.full(bsize, False, dtype=bool)
-    dist = np.full(bsize, 2**10, dtype=int)
-
-    p = start
-    dist[p[0], p[1]] = 0
-    viset = set()
-    while not (visited == True).all():
-        visited[p[0], p[1]] = True
-        f_path = find_forbidden_path(p, dist, visited)
-        for cp in [(p[0]+1, p[1]),(p[0]-1, p[1]),(p[0], p[1]+1),(p[0], p[1]-1)]:
-            if cp[0] >= 0 and cp[0] < bsize[0] and cp[1] >= 0 and cp[1] < bsize[1]:
-                if cp != f_path:
-                    dist[cp[0], cp[1]] = min(dist[cp[0], cp[1]], dist[p[0], p[1]] + blocks[cp[0], cp[1]])
-                viset.add(cp)
-        #print(viset)
-        p = min_coord(viset, dist, visited)
-        try:
-            viset.remove(p)
-        except:
-            pass
-        #print(visited)
-
-    return dist
-
-        
 def advent17_1():
-    file = open('input17_example.txt');  c_size = (13, 13)
-    #file = open('input17.txt'); c_size = (141, 141)
+    #file = open('input17_example.txt');  c_size = (13, 13)
+    file = open('input17.txt'); c_size = (141, 141)
 
     blocks = np.full(c_size, 0, dtype=int)
 
@@ -86,17 +137,60 @@ def advent17_1():
             blocks[i, j] = int(line[j])
         i += 1
 
-    print(blocks)
-    dist = dijkstra(blocks, (3,3))
-    #print(dist)
-    dist = dijkstra(blocks, (6, 6))
-    print(dist)
+    bsize = blocks.shape
+    gb = build_graph(blocks)
+    print('gb:', gb)
 
+    p1 = nx.shortest_path(gb, (0, 0, 'v'), (bsize[0] - 1, bsize[1] - 1, 'v'), weight='weight')
+    p2 = nx.shortest_path(gb, (0, 0, 'v'), (bsize[0] - 1, bsize[1] - 1, 'h'), weight='weight')
+    p3 = nx.shortest_path(gb, (0, 0, 'h'), (bsize[0] - 1, bsize[1] - 1, 'v'), weight='weight')
+    p4 = nx.shortest_path(gb, (0, 0, 'h'), (bsize[0] - 1, bsize[1] - 1, 'h'), weight='weight') 
+
+    shortest = min([
+        nx.path_weight(gb, p1, weight='weight'),
+        nx.path_weight(gb, p2, weight='weight'),
+        nx.path_weight(gb, p3, weight='weight'),
+        nx.path_weight(gb, p4, weight='weight')
+    ])
+    print('Min. loss is (1):', shortest)
+
+
+def advent17_2():
+    #file = open('input17_example.txt');  c_size = (13, 13)
+    file = open('input17.txt'); c_size = (141, 141)
+
+    blocks = np.full(c_size, 0, dtype=int)
+
+    i = 0
+    for line in file:
+        line = line.strip('\n')
+        for j in range(c_size[1]):
+            blocks[i, j] = int(line[j])
+        i += 1
+
+    bsize = blocks.shape
+    gb = build_graph_2(blocks)
+    print('gb:', gb)
+
+    p1 = nx.shortest_path(gb, (0, 0, 'v'), (bsize[0] - 1, bsize[1] - 1, 'v'), weight='weight')
+    p2 = nx.shortest_path(gb, (0, 0, 'v'), (bsize[0] - 1, bsize[1] - 1, 'h'), weight='weight')
+    p3 = nx.shortest_path(gb, (0, 0, 'h'), (bsize[0] - 1, bsize[1] - 1, 'v'), weight='weight')
+    p4 = nx.shortest_path(gb, (0, 0, 'h'), (bsize[0] - 1, bsize[1] - 1, 'h'), weight='weight') 
+
+    shortest = min([
+        nx.path_weight(gb, p1, weight='weight'),
+        nx.path_weight(gb, p2, weight='weight'),
+        nx.path_weight(gb, p3, weight='weight'),
+        nx.path_weight(gb, p4, weight='weight')
+    ])
+    print('Min. loss is (2):', shortest)
+
+    
 if __name__ == '__main__':
 
     start_time = time.time()
     print('Advent 17')
     advent17_1()
-    #advent17_2()
+    advent17_2()
     end_time_1 = time.time()
     print("time elapsed: {:.2f}s".format(end_time_1 - start_time))
