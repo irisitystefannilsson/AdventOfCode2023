@@ -128,7 +128,7 @@ def advent24_2():
 
     # these were obtained using maxima
     # starting from the equations for intersection with the first 3 hail stones
-    # with the thrown stone
+    # with the thrown stone (9 equations and 9 unknowns (X,Y, Z, Vx, Vy, Vz, t1, t2, t3)
     t1 = (((v3x - v2x)*y2 + (v2x - v3x)*y1 + (v2y - v3y)*x2 + (v3y - v2y)*x1)*z3
           + ((v2x - v3x)*y3 + (v3x - v2x)*y1 + (v3y - v2y)*x3 + (v2y - v3y)*x1)*z2
           + ((v3x - v2x)*y3 + (v2x - v3x)*y2 + (v2y - v3y)*x3 + (v3y - v2y)*x2)*z1
