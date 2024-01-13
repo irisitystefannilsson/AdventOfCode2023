@@ -90,10 +90,27 @@ def calc_spread(poss : list):
         zmin, zmax = min(zmin, p[2]), max(zmax, p[2])
     return [xmin, xmax], [ymin, ymax], [zmin, zmax]
 
-    
+
+def max_distance(poss : list):
+    maxdist = 0
+    mp1 = [0, 0, 0]
+    mp2 = [0, 0, 0]
+    for i in range(len(poss)):
+        for j in range(i + 1, len(poss)):
+            p1 = poss[i]
+            p2 = poss[j]
+            dist = math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2 + (p1[2] - p2[2])**2)
+            if dist > maxdist:
+                maxdist = dist
+                mp1 = p1
+                mp2 = p2
+
+    return maxdist, p1, p2
+
+
 def advent24_2():
-    file = open('input24_example.txt');
-    #file = open('input24.txt');
+    #file = open('input24_example.txt');
+    file = open('input24.txt');
 
     poss = list()
     vels = list()
@@ -105,14 +122,64 @@ def advent24_2():
         poss.append(p)
         vels.append(v)
 
-    for t in (range(1, 6)):
-        for i in range(len(poss)):
-            poss[i] = advance_hail(poss[i], vels[i], 1)
-        print(poss[0][0], poss[1][0], poss[2][0], poss[3][0], poss[4][0])
-        xs, ys, zs = calc_spread(poss)
-        #print(xs, ys, zs)
+    x1, y1, z1, v1x, v1y, v1z = poss[0][0], poss[0][1], poss[0][2], vels[0][0], vels[0][1], vels[0][2]
+    x2, y2, z2, v2x, v2y, v2z = poss[1][0], poss[1][1], poss[1][2], vels[1][0], vels[1][1], vels[1][2]
+    x3, y3, z3, v3x, v3y, v3z = poss[2][0], poss[2][1], poss[2][2], vels[2][0], vels[2][1], vels[2][2]
 
-        
+    # these were obtained using maxima
+    # starting from the equations for intersection with the first 3 hail stones
+    # with the thrown stone
+    t1 = (((v3x - v2x)*y2 + (v2x - v3x)*y1 + (v2y - v3y)*x2 + (v3y - v2y)*x1)*z3
+          + ((v2x - v3x)*y3 + (v3x - v2x)*y1 + (v3y - v2y)*x3 + (v2y - v3y)*x1)*z2
+          + ((v3x - v2x)*y3 + (v2x - v3x)*y2 + (v2y - v3y)*x3 + (v3y - v2y)*x2)*z1
+          + ((v3z - v2z)*x2 + (v2z - v3z)*x1)*y3 + ((v2z - v3z)*x3 + (v3z - v2z)*x1)*y2
+          + ((v3z - v2z)*x3 + (v2z - v3z)*x2)*y1) \
+    /(((v2x - v1x)*v3y + (v1y - v2y)*v3x + v1x*v2y - v1y*v2x)*z3
+      + ((v1x - v2x)*v3y + (v2y - v1y)*v3x - v1x*v2y + v1y*v2x)*z2
+      + ((v1x - v2x)*v3z + (v2z - v1z)*v3x - v1x*v2z + v1z*v2x)*y3
+      + ((v2x - v1x)*v3z + (v1z - v2z)*v3x + v1x*v2z - v1z*v2x)*y2
+      + ((v2y - v1y)*v3z + (v1z - v2z)*v3y + v1y*v2z - v1z*v2y)*x3
+      + ((v1y - v2y)*v3z + (v2z - v1z)*v3y - v1y*v2z + v1z*v2y)*x2)
+
+    t2 = (((v3x - v1x)*y2 + (v1x - v3x)*y1 + (v1y - v3y)*x2 + (v3y - v1y)*x1)*z3
+          + ((v1x - v3x)*y3 + (v3x - v1x)*y1 + (v3y - v1y)*x3 + (v1y - v3y)*x1)*z2
+          + ((v3x - v1x)*y3 + (v1x - v3x)*y2 + (v1y - v3y)*x3 + (v3y - v1y)*x2)*z1
+          + ((v3z - v1z)*x2 + (v1z - v3z)*x1)*y3 + ((v1z - v3z)*x3 + (v3z - v1z)*x1)*y2
+          + ((v3z - v1z)*x3 + (v1z - v3z)*x2)*y1) \
+    /(((v2x - v1x)*v3y + (v1y - v2y)*v3x + v1x*v2y - v1y*v2x)*z3
+      + ((v1x - v2x)*v3y + (v2y - v1y)*v3x - v1x*v2y + v1y*v2x)*z1
+      + ((v1x - v2x)*v3z + (v2z - v1z)*v3x - v1x*v2z + v1z*v2x)*y3
+      + ((v2x - v1x)*v3z + (v1z - v2z)*v3x + v1x*v2z - v1z*v2x)*y1
+      + ((v2y - v1y)*v3z + (v1z - v2z)*v3y + v1y*v2z - v1z*v2y)*x3
+      + ((v1y - v2y)*v3z + (v2z - v1z)*v3y - v1y*v2z + v1z*v2y)*x1)
+    
+    t3 = (((v2x - v1x)*y2 + (v1x - v2x)*y1 + (v1y - v2y)*x2 + (v2y - v1y)*x1)*z3
+          + ((v1x - v2x)*y3 + (v2x - v1x)*y1 + (v2y - v1y)*x3 + (v1y - v2y)*x1)*z2
+          + ((v2x - v1x)*y3 + (v1x - v2x)*y2 + (v1y - v2y)*x3 + (v2y - v1y)*x2)*z1
+          + ((v2z - v1z)*x2 + (v1z - v2z)*x1)*y3 + ((v1z - v2z)*x3 + (v2z - v1z)*x1)*y2
+          + ((v2z - v1z)*x3 + (v1z - v2z)*x2)*y1) \
+    /(((v2x - v1x)*v3y + (v1y - v2y)*v3x + v1x*v2y - v1y*v2x)*z2
+      + ((v1x - v2x)*v3y + (v2y - v1y)*v3x - v1x*v2y + v1y*v2x)*z1
+      + ((v1x - v2x)*v3z + (v2z - v1z)*v3x - v1x*v2z + v1z*v2x)*y2
+      + ((v2x - v1x)*v3z + (v1z - v2z)*v3x + v1x*v2z - v1z*v2x)*y1
+      + ((v2y - v1y)*v3z + (v1z - v2z)*v3y + v1y*v2z - v1z*v2y)*x2
+      + ((v1y - v2y)*v3z + (v2z - v1z)*v3y - v1y*v2z + v1z*v2y)*x1)
+
+    print('Collision times:', t1, t2, t3)
+
+    X = -(t1*((- x2) - t2*v2x) + t2*x1 + t1*t2*v1x) / (t1 - t2)
+    Vx =  ((- x2) + x1 - t2*v2x + t1*v1x ) / (t1 - t2)
+
+    Y = -(t1*((- y2) - t2*v2y) + t2*y1 + t1*t2*v1y) / (t1 - t2)
+    Vy = ((- y2) + y1 - t2*v2y + t1*v1y) / (t1 - t2)
+
+    Z = -(t1*((- z2) - t2*v2z) + t2*z1 + t1*t2*v1z) / (t1 - t2)
+    Vz = ((- z2) + z1 - t2*v2z + t1*v1z) / (t1 - t2)
+    print('Coords & velocity:', int(X), int(Y), int(Z), int(Vx), int(Vy), int(Vz))
+
+    print('Sum of coords:', int(X + Y + Z))
+
+    
 if __name__ == '__main__':
     start_time = time.time()
     print('Advent 24')
