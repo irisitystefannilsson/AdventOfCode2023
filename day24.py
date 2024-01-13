@@ -72,42 +72,6 @@ def advent24_1():
     print('Crossing paths in box:', nof_crosses)
 
 
-def advance_hail(p : tuple, v : tuple, dt : int):
-    p = (p[0] + dt*v[0], p[1] + dt*v[1], p[2] + dt*v[2])
-    return p
-
-
-def calc_spread(poss : list):
-    xmin = 2**32
-    xmax = -2**32
-    ymin = 2**32
-    ymax = -2**32
-    zmin = 2**32
-    zmax = -2**32
-    for p in poss:
-        xmin, xmax = min(xmin, p[0]), max(xmax, p[0])
-        ymin, ymax = min(ymin, p[1]), max(ymax, p[1])
-        zmin, zmax = min(zmin, p[2]), max(zmax, p[2])
-    return [xmin, xmax], [ymin, ymax], [zmin, zmax]
-
-
-def max_distance(poss : list):
-    maxdist = 0
-    mp1 = [0, 0, 0]
-    mp2 = [0, 0, 0]
-    for i in range(len(poss)):
-        for j in range(i + 1, len(poss)):
-            p1 = poss[i]
-            p2 = poss[j]
-            dist = math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2 + (p1[2] - p2[2])**2)
-            if dist > maxdist:
-                maxdist = dist
-                mp1 = p1
-                mp2 = p2
-
-    return maxdist, p1, p2
-
-
 def advent24_2():
     #file = open('input24_example.txt');
     file = open('input24.txt');
