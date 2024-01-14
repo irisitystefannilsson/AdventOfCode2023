@@ -1,13 +1,4 @@
 import time
-import numpy as np
-import functools
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 def next_seq(seq: list):
@@ -53,7 +44,7 @@ def advent9_1():
         #print('------------')
         sum += sequence[-1]
 
-    print('Sum: ', sum)
+    print('Sum (1): ', sum)
     
 
 def advent9_2():
@@ -69,11 +60,11 @@ def advent9_2():
         pseq = prev_seq(sequence)
         #print(nseq)
         sequence.insert(0, sequence[0] - pseq[0])
-        print(sequence)
-        print('------------')
+        #print(sequence)
+        #print('------------')
         sum += sequence[0]
 
-    print('Sum: ', sum)
+    print('Sum (2): ', sum)
 
 
 

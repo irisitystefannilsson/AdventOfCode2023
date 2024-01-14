@@ -1,13 +1,5 @@
 import time
 import numpy as np
-import functools
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 def expand_universe(universe : np.full, galaxies : list):
@@ -60,7 +52,7 @@ def advent11_1():
             #print(dist)
             distsum += dist
 
-    print('Sum of minlengths:', distsum)
+    print('Sum of minlengths (1):', distsum)
 
 
 def expand_universe_alot(universe : np.full, galaxies : list):
@@ -113,7 +105,7 @@ def advent11_2():
             #print(dist)
             distsum += dist
 
-    print('Sum of minlengths:', distsum)
+    print('Sum of minlengths (2):', distsum)
 
     
 if __name__ == '__main__':

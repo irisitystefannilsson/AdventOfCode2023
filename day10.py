@@ -1,13 +1,5 @@
 import time
 import numpy as np
-import functools
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 HUGE_DIST = 1000000
@@ -93,7 +85,7 @@ def dijkstra(dists : np.full, start):
         if finished:
             break
         if start == (-1, -1):
-            print(dists[start].neighbours)
+            #print(dists[start].neighbours)
             break
         
 
@@ -103,7 +95,7 @@ def find_largest_dist(arr : np.full):
         for j in range(arr.shape[1]):
             if arr[i, j].visited and arr[i, j].tube != '.' and arr[i, j].dist > largest:
                 largest = arr[i, j].dist
-                print(i, j)
+                #print(i, j)
     return largest
 
 
@@ -144,7 +136,7 @@ def advent10_1():
                 dists[i, j] = TubeNode(tubing[i, j], (i, j))
                 
     dijkstra(dists, start)
-    print('Distance:', find_largest_dist(dists))
+    print('Distance (1):', find_largest_dist(dists))
 
 
 def fill_unused_tubes(tubing : np.full, dists : np.full):
@@ -161,27 +153,27 @@ def remove_start(tubing : np.full, dists : np.full):
                 n1, n2 = dists[i, j].neighbours
                 if n1[0] == n2[0]:
                     tubing[i, j] = '-'
-                    print('S => ', tubing[i, j]) 
+                    #print('S => ', tubing[i, j]) 
                     return
                 elif n1[1] == n2[1]:
                     tubing[i, j] = '|'
-                    print('S => ', tubing[i, j]) 
+                    #print('S => ', tubing[i, j]) 
                     return
                 elif (n1 == (i, j-1) or n2 == (i, j-1)) and (n1[0] == i + 1 or n2[0] == i + 1):
                     tubing[i, j] = '7'
-                    print('S => ', tubing[i, j]) 
+                    #print('S => ', tubing[i, j]) 
                     return
                 elif (n1 == (i, j+1) or n2 == (i, j+1)) and (n1[0] == i + 1 or n2[0] == i + 1):
                     tubing[i, j] = 'F'
-                    print('S => ', tubing[i, j]) 
+                    #print('S => ', tubing[i, j]) 
                     return
                 elif (n1 == (i-1, j) or n2 == (i-1, j)) and (n1[1] == j + 1 or n2[1] == j + 1):
                     tubing[i, j] = 'L'
-                    print('S => ', tubing[i, j]) 
+                    #print('S => ', tubing[i, j]) 
                     return
                 elif (n1 == (i-1, j) or n2 == (i-1, j)) and (n1[1] == j - 1 or n2[1] == j - 1):
                     tubing[i, j] = 'J'
-                    print('S => ', tubing[i, j]) 
+                    #print('S => ', tubing[i, j]) 
                     return
 
 
@@ -246,14 +238,14 @@ def advent10_2():
                 tubing[i, j] = 'O'
 
     #print(tubing)
-    print('No. inside: ', nof_inside)
+    print('No. insidev(2): ', nof_inside)
 
-    
+
 if __name__ == '__main__':
 
     start_time = time.time()
     print('Advent 10')
-    #advent10_1()
+    advent10_1()
     advent10_2()
     end_time_1 = time.time()
     print("time elapsed: {:.2f}s".format(end_time_1 - start_time))
