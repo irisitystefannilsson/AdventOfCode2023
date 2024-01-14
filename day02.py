@@ -1,12 +1,4 @@
 import time
-import numpy as np
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 def advent2_1():

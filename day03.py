@@ -1,12 +1,5 @@
 import time
 import numpy as np
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 def corona_chars(row : int, number : (str, int), schematic : np.full):
@@ -64,7 +57,7 @@ def advent3_1():
                     sum += int(num[0])
                     break
 
-    print('Sum : ', sum)
+    print('Sum (1): ', sum)
 
 
 def check_ratio(numbers_on_rows : list, r : int, c : int, bounds : tuple):
@@ -79,11 +72,11 @@ def check_ratio(numbers_on_rows : list, r : int, c : int, bounds : tuple):
             used_num = (0, (0, 0))
             for j in range(c_start, c_stop):
                 if j in num[1] and num != used_num:
-                    print(i,j,num)
+                    #print(i,j,num)
                     g[gi] = int(num[0])
                     gi += 1
                     if gi == 2:
-                        print(g)
+                        #print(g)
                         return g[0], g[1]
                     used_num = num
                     break
@@ -126,7 +119,7 @@ def advent3_2():
                 g1, g2 = check_ratio(numbers_on_rows, r, c, real_size)
                 gear_sum += g1*g2
 
-    print('Sum : ', gear_sum)
+    print('Sum (2): ', gear_sum)
 
     
 if __name__ == '__main__':

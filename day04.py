@@ -1,12 +1,4 @@
 import time
-import numpy as np
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 def advent4_1():
@@ -28,8 +20,8 @@ def advent4_1():
                     card_sum *= 2
         sum += card_sum
 
-    print('Sum: ', sum)
-        
+    print('Sum (1): ', sum)
+
 
 class Card:
     """"""
@@ -78,7 +70,7 @@ def advent4_2():
                 #print('new card: ', i)
                 sum += 1
             
-    print('Sum :', sum)
+    print('Sum (2):', sum)
 
     
 if __name__ == '__main__':

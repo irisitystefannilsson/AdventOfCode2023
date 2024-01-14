@@ -1,16 +1,9 @@
 import time
-import numpy as np
 import functools
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 REL_STRENGTH = {'2' : 2, '3' : 3, '4' : 4, '5' : 5, '6' : 6, '7' : 7, '8' : 8, '9' : 9, 'T' : 10, 'J' : 11, 'Q' : 12, 'K' : 13, 'A' : 14}
+
 
 class Hand:
     def __init__(self, cards : list, bid : int):
@@ -51,8 +44,8 @@ def compare_hands(h1, h2):
 
 
 def advent7_1():
-    file = open('input07_example.txt')
-    #file = open('input07.txt')
+    #file = open('input07_example.txt')
+    file = open('input07.txt')
 
     hands = list()
     for line in file:
@@ -66,7 +59,7 @@ def advent7_1():
         #print(sorted_hands[h].cards, sorted_hands[h].pval)
         sum += (h + 1)*sorted_hands[h].bid
 
-    print('Sum:', sum)
+    print('Sum (1):', sum)
 
 
 def apply_J(hand : Hand):
@@ -116,10 +109,10 @@ def advent7_2():
     sorted_hands = sorted(hands, key = functools.cmp_to_key(compare_hands))
     sum = 0
     for h in range(len(sorted_hands)):
-        print(sorted_hands[h].cards, sorted_hands[h].pval)
+        #print(sorted_hands[h].cards, sorted_hands[h].pval)
         sum += (h + 1)*sorted_hands[h].bid
 
-    print('Sum:', sum)
+    print('Sum (2):', sum)
 
     
 if __name__ == '__main__':

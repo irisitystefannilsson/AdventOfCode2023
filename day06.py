@@ -1,12 +1,5 @@
 import time
-import numpy as np
 import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 def tp_roots(d, T):
@@ -30,10 +23,10 @@ def advent6_1():
     nofways = 1
     for d, T in zip(dists, times):
         r1, r2 = tp_roots(int(d), int(T))
-        print(r1, r2)
+        #print(r1, r2)
         nofways *= (r2 - r1 + 1)
 
-    print('Nof ways:', nofways)
+    print('Nof ways (1):', nofways)
     
     
 def advent6_2():
@@ -43,12 +36,12 @@ def advent6_2():
     time = int(time_line.split(':')[1].replace(' ', ''))
     dist_line = file.readline().strip('\n');
     dist = int(dist_line.split(':')[1].replace(' ', ''))
-    print(time, dist)
+    #print(time, dist)
     r1, r2 = tp_roots(dist, time)
     #print(r1, r2)
     nofways = (r2 - r1 + 1)
 
-    print('Nof ways:', nofways)
+    print('Nof ways (2):', nofways)
     
 
     

@@ -1,12 +1,4 @@
-import numpy as np
 import time
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 def mapping(number : int, mappings : list):
@@ -160,7 +152,7 @@ def advent5_1():
     for humidity in humiditys:
         locations.append(mapping(humidity, humidity_to_location))
     #print('locations')
-    print('Min .location: ', min(locations))
+    print('Min .location (1): ', min(locations))
 
     
 def advent5_2():
@@ -168,7 +160,7 @@ def advent5_2():
     file = open('input05.txt')
     seedline = file.readline().strip('\n')
     seeds = calc_seeds(seedline.split(': ')[1].split())
-    print(seeds)
+    #print(seeds)
 
     seed_to_soil = list()
     soil_to_fertilizer = list()
@@ -245,7 +237,7 @@ def advent5_2():
     for loc in locations:
         min_loc = min(min_loc, loc[0])
 
-    print('Min. loc.:', min_loc)
+    print('Min. loc. (2):', min_loc)
     
     
 if __name__ == '__main__':

@@ -1,12 +1,4 @@
 import time
-import numpy as np
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 def advent1_1():
@@ -24,8 +16,8 @@ def advent1_1():
                 last_dig = c
                 break
 
-        #print(first_dig, last_dig)
         sum += int(first_dig + last_dig)
+
     print('Sum : ', sum)
 
 
@@ -53,14 +45,15 @@ def advent1_2():
                 break
             pos -= 1
         for n in nums.keys():
-            if line.rfind(n) > pos and line.rfind(n) != -1:
+            if line.rfind(n) > pos:
                 last_dig = nums[n]
                 pos = line.rfind(n)
 
-        #print(first_dig, last_dig)
         sum += int(first_dig + last_dig)
+
     print('Sum : ', sum)
 
+    
 if __name__ == '__main__':
 
     start_time = time.time()
