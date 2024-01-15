@@ -1,13 +1,4 @@
 import time
-import numpy as np
-import functools
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 def HASH(word : str):
@@ -26,7 +17,7 @@ def advent15_1():
     sum = 0
     for word in sequence:
         sum += HASH(word)
-    print('Sum is ', sum)
+    print('Sum is (1)', sum)
 
 
 class Lens:
@@ -80,7 +71,7 @@ def advent15_2():
     for box in range(256):
         boxes.append(Box())
     for word in sequence:
-        print(word)
+        #print(word)
         if word[-1] == '-':
             label = word[:-1]
             box = HASH(label)
@@ -100,7 +91,7 @@ def advent15_2():
     for box in range(256):
         focus_power += boxes[box].calc_focus_power()*(box + 1)
 
-    print('Foc. Pow:', focus_power)
+    print('Foc. Pow (2):', focus_power)
 
     
 if __name__ == '__main__':

@@ -1,13 +1,8 @@
 import time
 import numpy as np
-import functools
-import math
-import copy
 
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
+
 DATA_CACHE = dict()
-USED = []
 
 
 def find_symmetry(pattern : list, noc = -1):
@@ -18,7 +13,7 @@ def find_symmetry(pattern : list, noc = -1):
         for j in range(cols):
             pat[i, j] = pattern[i][j]
 
-    print(pat)
+    #print(pat)
     # check cols
     for j in range(cols - 1):
         sym = True
@@ -61,7 +56,7 @@ def advent13_1():
         if line == '':
             sym = find_symmetry(lines)
             DATA_CACHE[noc] = sym
-            print(DATA_CACHE)
+            #print(DATA_CACHE)
             noc += 1
             sym_sum += sym
             lines = list()
@@ -70,11 +65,11 @@ def advent13_1():
     # last pattern        
     sym = find_symmetry(lines)
     DATA_CACHE[noc] = sym
-    print(DATA_CACHE)
+    #print(DATA_CACHE)
     noc += 1
     sym_sum += sym
         
-    print('Sum of symms:' , sym_sum)
+    print('Sum of symms (1):' , sym_sum)
 
 
 def find_new_symmetry(pattern : list, noc : int):
@@ -97,7 +92,7 @@ def find_new_symmetry(pattern : list, noc : int):
                 else:
                     pattern[i][j] = '#'
             else:
-                print(pattern[i][j])
+                #print(pattern[i][j])
                 raise
 
                     
@@ -111,21 +106,21 @@ def advent13_2():
     for line in file:
         line = line.strip('\n')
         if line == '':
-            print(DATA_CACHE)
-            print(noc)
+            #print(DATA_CACHE)
+            #print(noc)
             sym = find_new_symmetry(lines, noc)
             noc += 1
-            print(sym)
+            #print(sym)
             sym_sum += sym
             lines = list()
         else:
             lines.append(list(line))
     # last pattern        
     sym = find_new_symmetry(lines, noc)
-    print(sym)
+    #print(sym)
     sym_sum += sym
         
-    print('Sum of symms:' , sym_sum)
+    print('Sum of symms (2):' , sym_sum)
     
 
 if __name__ == '__main__':

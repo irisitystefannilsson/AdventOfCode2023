@@ -1,13 +1,8 @@
 import time
 import numpy as np
-import functools
-import math
-import copy
 
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
+
+SEQUENCE = list()
 
 
 def tilt(col : np.full):
@@ -60,10 +55,11 @@ def advent14_1():
         board.append(list(line))
 
     load = find_load(board)
-    print('Load:', load)
+    print('Load (1):', load)
 
 
 def rotate(in_board : list):
+    global SEQUENCE
     rows = len(in_board)
     cols = len(in_board[0])
     board = np.full((rows, cols), '.', dtype=str)
@@ -91,8 +87,8 @@ def rotate(in_board : list):
     load = 0
     for j in range(cols):
         load += calc_load(list(board[:, j]))
-    LOG_FILE.write(str(load))
-    LOG_FILE.write('\n')
+
+    SEQUENCE.append(load)
     return board
                     
 
@@ -108,12 +104,29 @@ def advent14_2():
     for r in range(1000):
         board = rotate(board)
 
+    global SEQUENCE
+    s, l = find_repeat(SEQUENCE)
+    idx = (1000000000 - s) % l
+    print('Load (2):', SEQUENCE[s + idx - 1])
     # After 135 rotations the load starts
     # repeating with a cycle length of 11
     # The correct load is then:
     # indx = (1000000000 - 135) % 11
     # cycle_element[indx] === 83516
 
+
+def check_repeat(sequence : list, start : int, length : int):
+    if sequence[start:start + length] == sequence[start + length:start + 2*length]:
+        return True
+    return False
+
+
+def find_repeat(seq : list):
+    for s in range(len(seq) - 1):
+        for l in range(2, (len(seq) - s - 1) // 2):
+            if check_repeat(seq, s, l):
+                return s, l
+    return -1, -1
     
 if __name__ == '__main__':
 
