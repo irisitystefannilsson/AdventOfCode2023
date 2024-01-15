@@ -1,14 +1,4 @@
 import time
-import numpy as np
-import functools
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
-STARTSET = set()
 
 
 class Bem:
@@ -21,7 +11,7 @@ class Bem:
 
 def count_insides(bems : list):
     coord = bems[0].coord[1]
-    
+
     c = 0
     i = 0
     for b in bems:
@@ -30,7 +20,6 @@ def count_insides(bems : list):
                 c += b.coord[1] - coord - 1
         coord = b.coord[1]
         i += 1
-    #print(c)
     return c
 
 
@@ -48,7 +37,7 @@ def advent18_1():
 
     boundary = list()
     start = (0, 0)
-    #boundary.append(Bem(start, '#ffffff'))
+
     coord = start
     for line in file:
         line = line.strip('\n')
@@ -90,14 +79,10 @@ def advent18_1():
             elif boundary[b].dir == 'L' and  boundary[b-1].dir == 'D':
                 boundary[b-1].symbol = 'J'
 
-    #for b in boundary:
-    #    print(b.symbol, b.dir)
 
-        #print(boundary[0].coord, boundary[-1].coord)
-    print('Trench len.:', len(boundary))
     minH = min(boundary, key=lambda b: b.coord[0])
     maxH = max(boundary, key=lambda b: b.coord[0])
-    print(minH.coord, maxH.coord)
+
     h_sorted_b = list()
     idx = 0
     for i in range(minH.coord[0], maxH.coord[0] + 1):
@@ -116,7 +101,7 @@ def advent18_1():
         #print('--')
         incount += count_insides(l)
 
-    print('Lava vol.:', incount + len(boundary))
+    print('Lava vol. (1):', int(incount + len(boundary)))
 
     
 def advent18_2():
@@ -142,7 +127,6 @@ def advent18_2():
             dir = 'L'
         elif color[6] == '3':
             dir = 'U'
-        print(dir, length, color)
         if dir == 'U':
             coord = (coord[0] - length, coord[1])
             sym = '|'
@@ -187,16 +171,12 @@ def advent18_2():
     #for b in corners:
     #    print(b.symbol, b.coord)
     
-    print('Trench len.:', trenchlen)
+    #print('Trench len.:', trenchlen)
     iarea = shoelace(corners)
-    print('Inner area:', iarea)
-    print('Lava vol.:', 0.5*trenchlen + iarea + 1) # +1 due to 4 corners with only 1/4 inside border 
+    #print('Inner area:', iarea)
+    print('Lava vol. (2):', int(0.5*trenchlen + iarea + 1)) # +1 due to 4 corners with only 1/4 inside border 
 
 
-#def count_from_corners(lc : list, last : int):
-#    if lc[-1] == [] and last > 0:
-#        return last
-    
 def shoelace(corners : list):
     sum = 0
     for i in range(len(corners)):

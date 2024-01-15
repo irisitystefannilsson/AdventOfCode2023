@@ -1,13 +1,6 @@
 import time
-import numpy as np
-import functools
-import math
-import copy
 
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
+
 ALLCONSTR = list()
 
 
@@ -60,7 +53,7 @@ class workflow:
                 retrule[-1].append([rating, op, val])
 
         return retrule
-        
+
 
 def advent19_1():
     #file = open('input19_example.txt')
@@ -93,7 +86,7 @@ def advent19_1():
         if flow == 'A':
             sum += (p['x'] + p['m'] + p['a'] + p['s'])
 
-    print('Sum:', sum)
+    print('Sum (1):', sum)
     
     
 def advent19_2():
@@ -162,7 +155,7 @@ def advent19_2():
             vol -= lvol
 
         #print(vol)
-    print('All possible acc.:', hvol) 
+    print('All possible acc. (2):', hvol) 
         
     
 class HCube:
@@ -197,8 +190,8 @@ def create_constr(workflows : list, start : str, chain : list):
                     ALLCONSTR.append(chain)
                 else:
                     create_constr(workflows, key, chain)
-                
-            
+
+                    
 if __name__ == '__main__':
 
     start_time = time.time()

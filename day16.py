@@ -1,13 +1,7 @@
 import time
 import numpy as np
-import functools
-import math
-import copy
 
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
+
 STARTSET = set()
 
 
@@ -118,7 +112,7 @@ def advent16_1():
             print('All done!')
             break
         
-    print((energized == '#').sum())
+    print('Curr. energized (1):', (energized == '#').sum())
 
 
 def advent16_2():
@@ -167,16 +161,16 @@ def advent16_2():
                     inside = inside_contraption(start, contraption)
                     if inside and start.dir in visited[start.coord[0], start.coord[1]]:
                         break
-                    
+
             except KeyError:
                 #print('All done!')
                 break
-        
+
         energy = max((energized == '#').sum(), energy)
         #print(energy)
-    print('Emax:', energy)
-    
-    
+    print('Emax (2):', energy)
+
+
 if __name__ == '__main__':
 
     start_time = time.time()

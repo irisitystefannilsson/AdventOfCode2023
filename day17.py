@@ -3,9 +3,6 @@ import numpy as np
 import networkx as nx
 
 
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-
 """
 The idea of building a graph with vertical & horizontal connections of 
 different lengths(*) comes from the reddit discussion board user 'thblt'. 

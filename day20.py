@@ -1,16 +1,12 @@
 from enum import Enum
 import time
-import numpy as np
-import functools
-import math
-import copy
+
 
 NUMBER_OF_CALLS = 0
 LOG_FILE = open('logfile.txt', 'w')
 DATA_CACHE = dict()
-USED = []
-ALLCONSTR = list()
 MODULES = dict()
+
 
 class STATE(Enum):
     OFF = 0
@@ -41,9 +37,6 @@ class Module:
         #print(sender, '-', pulse, '->', self.name)
         if self.name == 'cn' and pulse == PULSE.HIGH and len(DATA_CACHE) < 4:
             DATA_CACHE[sender] = NUMBER_OF_CALLS
-        #    print('SENDER IS:', sender, 'Button push no.:', NUMBER_OF_CALLS)
-        #    raise        
-        #time.sleep(2)
 
     def release_signal(self):
         #print('release', self.name)
@@ -164,7 +157,7 @@ def advent20_1():
             name = UNRELEASED_PULSES.pop(0)
             MODULES[name].release_signal()
 
-    print('Low x High pulses:', PULSES_SENT[PULSE.LOW]*PULSES_SENT[PULSE.HIGH])
+    print('Low x High pulses: (1)', PULSES_SENT[PULSE.LOW]*PULSES_SENT[PULSE.HIGH])
 
 
 def advent20_2():
@@ -217,7 +210,7 @@ def advent20_2():
     for key, item in DATA_CACHE.items():
         button_pushes *= item
 
-    print('Button pushes needed:', button_pushes)
+    print('Button pushes needed (2):', button_pushes)
 
     
 if __name__ == '__main__':
