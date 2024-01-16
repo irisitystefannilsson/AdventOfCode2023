@@ -1,14 +1,4 @@
 import time
-import numpy as np
-import functools
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
-STARTSET = set()
 
 
 def to_equation(p : list, v : list):
@@ -69,7 +59,7 @@ def advent24_1():
             x, y= calc_intersect(k0, m0, k1, m1)
             if within_box(x, y, box) and in_the_future(poss[i], vels[i], x, y) and in_the_future(poss[j], vels[j], x, y):
                 nof_crosses += 1
-    print('Crossing paths in box:', nof_crosses)
+    print('Crossing paths in box (1):', nof_crosses)
 
 
 def advent24_2():
@@ -129,7 +119,7 @@ def advent24_2():
       + ((v2y - v1y)*v3z + (v1z - v2z)*v3y + v1y*v2z - v1z*v2y)*x2
       + ((v1y - v2y)*v3z + (v2z - v1z)*v3y - v1y*v2z + v1z*v2y)*x1)
 
-    print('Collision times:', t1, t2, t3)
+    print('Collision times:', int(t1), int(t2), int(t3))
 
     X = -(t1*((- x2) - t2*v2x) + t2*x1 + t1*t2*v1x) / (t1 - t2)
     Vx =  ((- x2) + x1 - t2*v2x + t1*v1x ) / (t1 - t2)
@@ -141,7 +131,7 @@ def advent24_2():
     Vz = ((- z2) + z1 - t2*v2z + t1*v1z) / (t1 - t2)
     print('Coords & velocity:', int(X), int(Y), int(Z), int(Vx), int(Vy), int(Vz))
 
-    print('Sum of coords:', int(X + Y + Z))
+    print('Sum of coords (2):', int(X + Y + Z))
 
     
 if __name__ == '__main__':

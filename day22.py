@@ -1,15 +1,6 @@
 import time
-import numpy as np
-import functools
-import math
 import copy
-
 from enum import Enum
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
 
 
 class Dir(Enum):
@@ -87,13 +78,6 @@ def find_more_support(bricks : list, pos : int):
             if pos not in bricks[p].supports:
                 bricks[p].supports.append(pos)
 
-    #for p in range(pos + 1, len(bricks), 1):
-    #    if bricks[pos].interesect(bricks[p]) and bricks[pos].start[2] == (bricks[p].end[2] + 1):
-    #        if p not in bricks[pos].supported_by:
-    #            bricks[pos].supported_by.append(p)
-    #            print(pos, bricks[pos].start, p, bricks[p].start)
-    #        if pos not in bricks[p].supports:
-    #            bricks[p].supports.append(pos)
 
 def advent22_1():
     #file = open('input22_example.txt')
@@ -131,7 +115,7 @@ def advent22_1():
                 add = 0
         nof_dis += add
 
-    print(str(nof_dis) + ' can be disintegrated')
+    print(str(nof_dis) + ' can be disintegrated (1)')
 
     
 def advent22_2():
@@ -180,7 +164,7 @@ def advent22_2():
 
         #print('Brick:', bricks[i].name, ' nof dis.:', nof_dis)
 
-    print('Tot dis.:', tot_dis)
+    print('Tot dis. (2):', tot_dis)
     
 
 def dis_brick(bricks : list, i : int):
@@ -199,7 +183,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
     print('Advent 22')
-    #advent22_1()
+    advent22_1()
     advent22_2()
     end_time_1 = time.time()
     print("time elapsed: {:.2f}s".format(end_time_1 - start_time))

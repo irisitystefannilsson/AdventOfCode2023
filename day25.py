@@ -1,15 +1,6 @@
 import time
 import networkx as nx
 
-import math
-import copy
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
-STARTSET = set()
-
 
 def advent25_1():
     #file = open('input25_example.txt')
@@ -39,7 +30,7 @@ def advent25_1():
             G.add_edge(k, n)
 
     cut = nx.minimum_edge_cut(G)
-    print(cut)
+    print('Edges to be cut:', cut)
     for e in cut:
         #print(e[0], e[1])
         G.remove_edge(e[0], e[1])
@@ -47,9 +38,9 @@ def advent25_1():
     n1 = nx.node_connected_component(G, e[0])
     n2 = nx.node_connected_component(G, e[1])
 
-    print(len(n1))
-    print(len(n2))
-    print(len(n1)*len(n2))
+    print('Subgraph 1:', len(n1))
+    print('Subgraph 2: ',len(n2))
+    print('Product:', len(n1)*len(n2))
     
         
 if __name__ == '__main__':

@@ -1,8 +1,5 @@
 import time
 import numpy as np
-import functools
-import math
-import copy
 import resource, sys
 
 np.set_printoptions(edgeitems=30, linewidth=100000, formatter=dict(float=lambda x: "%.3g" % x))
@@ -87,7 +84,7 @@ def find_forks(trails : np.full):
     visited[p[0], p[1]] = True
     while not (visited == True).all():
         follow_trail(trails, visited, p, (p[0] + 1, p[1]))
-        
+
 
 def follow_trail(trails : np.full, visited : np.full, node : tuple, start : tuple):
     global NODES
@@ -197,7 +194,7 @@ def advent23_1():
     #print(trails)
 
     dist = dijkstra2(trails, start)
-    print('Longest path:', abs(dist[trail_size[0] - 1, trail_size[1] - 2]))
+    print('Longest path (1):', abs(dist[trail_size[0] - 1, trail_size[1] - 2]))
 
 
 def advent23_2():
@@ -222,7 +219,7 @@ def advent23_2():
         if (trail_size[0] - 1, trail_size[1] - 2) in path:
             max_len = max(calc_length(path), max_len)
 
-    print('Max length:', max_len)
+    print('Max length (2):', max_len)
     
     
 if __name__ == '__main__':

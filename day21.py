@@ -1,15 +1,5 @@
-from enum import Enum
 import time
 import numpy as np
-import functools
-import math
-
-NUMBER_OF_CALLS = 0
-LOG_FILE = open('logfile.txt', 'w')
-DATA_CACHE = dict()
-USED = []
-ALLCONSTR = list()
-MODULES = dict()
 
 
 def add_possibilities(possibilities : set, garden : np.full):
@@ -50,8 +40,8 @@ def advent21_1():
     for step in range(64):
         possible_plots = add_possibilities(possible_plots, garden)
 
-    for p in possible_plots:
-        garden[p[0], p[1]] = 'O'
+    #for p in possible_plots:
+    #    garden[p[0], p[1]] = 'O'
     #print(garden)
 
     print('Total (1):', len(possible_plots))
@@ -103,7 +93,7 @@ def advent21_2():
 
     diff55 = []
     for i in range(3):
-        diff55.append(nos[sim_steps -1 - i * incr] - nos[sim_steps - 1 - (i+1)*incr])
+        diff55.append(nos[sim_steps - 1 - i * incr] - nos[sim_steps - 1 - (i + 1)*incr])
             
     print(diff55[0] - diff55[1], diff55[1] - diff55[2])
         
